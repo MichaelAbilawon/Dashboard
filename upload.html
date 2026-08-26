@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rainoil — Daily Upload</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link rel="stylesheet" href="css/upload.css">
+</head>
+<body>
+<div class="card">
+  <h1>📊 Rainoil Daily Upload</h1>
+  <p class="sub">Upload today's Excel file to update the shared dashboard</p>
+
+  <div class="creds" id="credsBox">
+    <p>⚠️ Paste your Supabase credentials once, then they'll be remembered</p>
+    <input type="text" id="inpUrl"  placeholder="Supabase Project URL  e.g. https://xxxx.supabase.co">
+    <input type="text" id="inpKey"  placeholder="Supabase anon/public key (long JWT string)">
+  </div>
+
+  <div class="login-box" id="loginBox">
+    <p>🔒 Sign in to upload — only accounts with upload access can save data</p>
+    <input type="email"    id="inpEmail"    placeholder="Email" autocomplete="username">
+    <input type="password" id="inpPassword" placeholder="Password" autocomplete="current-password">
+    <button id="btnSignIn" onclick="doSignIn()">Sign In</button>
+    <p class="login-error" id="loginError"></p>
+  </div>
+
+  <div id="uploadForm" style="display:none">
+    <p class="signed-in-as">Signed in as <strong id="signedInAs"></strong> — <a href="#" onclick="signOut(); return false;">Sign out</a></p>
+
+    <label for="inpDate">Sales Date</label>
+    <input type="date" id="inpDate">
+
+    <label for="inpFile">Daily Excel File (.xlsx / .xls)</label>
+    <input type="file" id="inpFile" accept=".xlsx,.xls">
+
+    <button id="btnUpload" onclick="doUpload()">Upload to Dashboard</button>
+
+    <div class="log" id="log"><span class="info">Ready — select a date and file, then click Upload.</span></div>
+  </div>
+</div>
+<!-- Scripts load in dependency order. credentials.js and auth.js
+     are both needed before upload-service.js: credentials.js
+     supplies the project URL/anon key, auth.js supplies the
+     signed-in user's access token that daily_sales writes now
+     require (see sql/001_lockdown_daily_sales_writes.sql).
+     station-lookup and excel-parser are pure data/parsing
+     helpers with no DOM dependency. -->
+<script src="js/upload/credentials.js"></script>
+<script src="js/upload/auth.js"></script>
+<script src="js/upload/log.js"></script>
+<script src="js/upload/station-lookup.js"></script>
+<script src="js/upload/excel-parser.js"></script>
+<script src="js/upload/upload-service.js"></script>
+</body>
+</html>

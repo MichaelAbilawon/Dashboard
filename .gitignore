@@ -1,0 +1,37 @@
+# ── Secrets / environment ──
+.env
+.env.local
+.env.*.local
+
+# ── OS files ──
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Editor / IDE ──
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── Logs ──
+*.log
+npm-debug.log*
+
+# ── Dependency directories (only relevant if tooling is added later) ──
+node_modules/
+
+# ── Local scratch / exports ──
+*.tmp
+/exports/
+/downloads/
+
+# ── Company-sensitive raw data ──
+# Any raw Excel exports or CSV dumps of actual sales data should never
+# be committed to this repo. Keep them entirely outside the project
+# folder, or in an explicitly-approved private data directory that is
+# excluded here.
+*.xlsx
+*.xls
+!/**/sample-data/**/*.xlsx
