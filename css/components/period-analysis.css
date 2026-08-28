@@ -1,0 +1,26 @@
+/* ── PERIOD ANALYSIS ── */
+.pa-context{font-family:var(--font-mono);font-size:.78rem;font-weight:600;color:var(--ink-2);background:var(--surface-alt);border:1px solid var(--line);padding:.65rem 1rem;margin-bottom:1.2rem}
+.pa-error{font-family:var(--font-sans);font-size:.8rem;font-weight:600;color:var(--bad);min-height:1.1em;margin:-.4rem 0 1rem}
+
+/* Bug fix: html{color-scheme:light dark} in base.css leaves the
+   *native* calendar-picker icon following the OS's light/dark
+   preference, completely independent of this app's own theme
+   toggle (which just switches the html[data-theme] attribute and
+   the CSS variables above — it doesn't touch color-scheme). When
+   the two disagree, the icon renders in a color with almost no
+   contrast against the input's --surface background, effectively
+   invisible. Pinning color-scheme to whichever theme is actually
+   active keeps the icon (and any other native date-picker chrome)
+   visible in both themes. */
+html[data-theme="light"] #pa-start,
+html[data-theme="light"] #pa-end{color-scheme:light}
+html[data-theme="dark"] #pa-start,
+html[data-theme="dark"] #pa-end{color-scheme:dark}
+
+/* The Recorded-Day Average is the single most important figure on
+   this tab (req #17: "the most prominent metric"), so its KPI card
+   gets the same accent treatment already used elsewhere for a
+   primary metric, just slightly larger. Scoped to #pa-kpis only —
+   .kpi-card.accent is also used on Overview and Stations, and must
+   not change size there. */
+#pa-kpis .kpi-card.accent .kpi-val{font-size:1.85rem}

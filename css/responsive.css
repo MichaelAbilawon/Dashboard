@@ -1,0 +1,11 @@
+@media(max-width:900px){
+  .chart-grid{grid-template-columns:1fr}
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .masthead{padding:.85rem 1.2rem}.content{padding:1.2rem}
+  .tabs{padding:0 1.2rem;gap:1.1rem}
+  .brand-logo-wrap img{height:22px}
+  .brand-word{font-size:.92rem}
+  .report-meta{display:none}
+  .drill-count{margin-left:0;width:100%}
+}
+

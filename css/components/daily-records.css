@@ -1,0 +1,23 @@
+/* ── DAILY RECORDS: STAT STRIP + PARTIAL-DATA MARKERS ── */
+.stat-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-bottom:1.4rem;transition:background-color .25s ease,border-color .25s ease}
+.stat-item{background:var(--surface);padding:1rem 1.15rem;transition:background-color .25s ease}
+.stat-item-label{font-family:var(--font-mono);font-size:.64rem;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.45rem}
+.stat-item-val{font-family:var(--font-display);font-size:1.28rem;font-weight:600;line-height:1;color:var(--ink)}
+.stat-item-val.warn{color:var(--gold)}
+.stat-item-val.good{color:var(--good)}
+.stat-item-sub{font-family:var(--font-mono);font-size:.68rem;color:var(--ink-3);margin-top:.4rem}
+td.num.partial{border-bottom:1px dotted var(--gold);cursor:help}
+.blank-cell{color:var(--ink-3);font-style:italic}
+.station-row{cursor:pointer}
+.station-row:hover td{background:var(--brand-tint)}
+.date-link{color:var(--brand);text-decoration:none;border-bottom:1px dotted var(--brand);cursor:pointer;font-weight:600}
+.date-link:hover{border-bottom-style:solid}
+.detail-head{margin-bottom:1.4rem}
+.detail-head .sec-title{margin-top:.9rem}
+.drill-bar{display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;flex-wrap:wrap}
+.drill-bar label{font-family:var(--font-mono);font-size:.7rem;color:var(--ink-3);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.drill-bar select,.drill-bar input{background:var(--surface);border:1px solid var(--line-strong);color:var(--ink);padding:.45rem .75rem;font-family:var(--font-sans);font-size:.8rem;outline:none;transition:border-color .15s}
+.drill-bar select:focus,.drill-bar input:focus{border-color:var(--brand)}
+.drill-bar input{width:220px}
+.drill-count{margin-left:auto;font-family:var(--font-mono);font-size:.72rem;color:var(--ink-3)}
+

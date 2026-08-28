@@ -1,0 +1,18 @@
+/* ── KPI CARDS ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-bottom:1.6rem;transition:background-color .25s ease,border-color .25s ease}
+.kpi-card{background:var(--surface);padding:1.15rem 1.25rem;transition:background-color .25s ease}
+.kpi-label{font-family:var(--font-mono);font-size:.66rem;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.55rem}
+.kpi-val{font-family:var(--font-display);font-size:1.6rem;font-weight:600;line-height:1;color:var(--ink)}
+.kpi-sub{font-family:var(--font-mono);font-size:.72rem;color:var(--ink-3);margin-top:.45rem}
+.kpi-sub.good{color:var(--good)}
+.kpi-sub.bad{color:var(--bad)}
+.kpi-card.accent .kpi-val{color:var(--brand)}
+
+/* Visually separates the Year-to-Date rollup from the monthly KPIs
+   above it on the Overview tab, so it reads as a distinct summary
+   window rather than more of the same monthly figures. Same divider
+   treatment as .trend-section (Stations tab's in-detail trend) for
+   visual consistency, kept as its own class since it's a different
+   concept, not a re-skin. */
+.ytd-section{margin-top:2.2rem;padding-top:1.8rem;border-top:1px solid var(--line-strong)}
+

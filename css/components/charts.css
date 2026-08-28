@@ -1,0 +1,8 @@
+/* ── CHARTS ── */
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);margin-bottom:1.6rem;transition:background-color .25s ease,border-color .25s ease}
+.chart-grid.full{grid-template-columns:1fr}
+.chart-card{background:var(--surface);padding:1.3rem;transition:background-color .25s ease}
+.chart-title{font-family:var(--font-mono);font-size:.7rem;font-weight:600;color:var(--ink-2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:1rem}
+.chart-wrap{position:relative;height:250px}
+.chart-wrap.tall{height:300px}
+

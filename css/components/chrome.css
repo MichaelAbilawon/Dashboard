@@ -1,0 +1,41 @@
+/* ── CHROME ── */
+#dashboard{display:none;flex-direction:column;min-height:100vh}
+.masthead{background:var(--surface);border-bottom:1px solid var(--line-strong);padding:1.05rem 2.2rem .9rem;transition:background-color .25s ease,border-color .25s ease}
+.masthead-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem}
+.brand-block{display:flex;align-items:center;gap:.85rem}
+.brand-logo-wrap{background:var(--logo-chip-bg);border:1px solid var(--logo-chip-border);padding:.4rem .7rem;display:inline-flex;align-items:center;line-height:0}
+.brand-logo-wrap img{height:26px;width:auto;display:block}
+.brand-text{display:flex;flex-direction:column;gap:.15rem}
+.brand-word{font-family:var(--font-display);font-weight:700;font-size:1.02rem;letter-spacing:.01em;color:var(--ink)}
+.brand-eyebrow{font-family:var(--font-mono);font-size:.64rem;font-weight:600;letter-spacing:.13em;color:var(--ink-3);text-transform:uppercase}
+.masthead-right{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}
+.report-meta{font-family:var(--font-mono);font-size:.72rem;color:var(--ink-3);text-align:right;line-height:1.5}
+select#year-select,select#month-only-select{background:var(--surface);border:1px solid var(--line-strong);color:var(--ink);padding:.5rem .85rem;font-family:var(--font-sans);font-size:.85rem;font-weight:600;outline:none;cursor:pointer;transition:border-color .15s}
+select#year-select{min-width:90px}
+select#month-only-select{min-width:150px}
+select#year-select:hover,select#month-only-select:hover{border-color:var(--line-strong)}
+select#year-select:focus,select#month-only-select:focus{border-color:var(--brand)}
+.hbtn{background:transparent;border:1px solid var(--line-strong);color:var(--ink-2);padding:.5rem .9rem;font-size:.76rem;font-family:var(--font-mono);letter-spacing:.03em;cursor:pointer;transition:all .15s}
+.hbtn:hover{border-color:var(--brand);color:var(--brand)}
+.theme-toggle{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line-strong);background:var(--surface);cursor:pointer;transition:border-color .15s,color .15s,transform .15s;color:var(--ink-2);flex:none}
+.theme-toggle:hover{border-color:var(--brand);color:var(--brand)}
+.theme-toggle:active{transform:scale(.94)}
+.theme-toggle svg{width:16px;height:16px;display:none}
+html[data-theme="light"] .theme-toggle .icon-moon{display:block}
+html[data-theme="dark"] .theme-toggle .icon-sun{display:block}
+.gold-rule{height:2px;background:var(--gold);margin-top:.9rem}
+
+/* ── TABS ── */
+.tabs{background:var(--surface);border-bottom:1px solid var(--line);padding:0 2.2rem;display:flex;gap:1.8rem;overflow-x:auto;transition:background-color .25s ease,border-color .25s ease}
+.tab{padding:.9rem 0;font-family:var(--font-mono);font-size:.74rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
+.tab:hover{color:var(--ink-2)}
+.tab.active{color:var(--brand);border-bottom-color:var(--brand)}
+.content{padding:2.2rem;flex:1;max-width:1440px;margin:0 auto;width:100%}
+.tab-panel{display:none}.tab-panel.active{display:block;animation:fadein .2s ease}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+
+/* ── SECTION HEADERS ── */
+.sec-title{font-family:var(--font-display);font-size:1.15rem;font-weight:600;color:var(--ink)}
+.sec-sub{font-size:.8rem;color:var(--ink-3);margin-top:.2rem}
+.sec-head{margin-bottom:1.3rem}
+

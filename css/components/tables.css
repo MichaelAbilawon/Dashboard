@@ -1,0 +1,14 @@
+/* ── TABLES ── */
+.tbl-wrap{background:var(--surface);border:1px solid var(--line);margin-bottom:1.6rem;transition:background-color .25s ease,border-color .25s ease}
+.tbl-scroll{overflow:auto;max-height:640px}
+table{width:100%;border-collapse:collapse;font-size:.8rem}
+thead tr{background:var(--surface-alt)}
+th{position:sticky;top:0;z-index:1;padding:.7rem 1rem;text-align:left;font-family:var(--font-mono);font-size:.66rem;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;background:var(--surface-alt);border-bottom:1px solid var(--line-strong);box-shadow:0 1px 0 var(--line-strong)}
+th.num,td.num{text-align:right}
+th.rank-col,td.rank-col{text-align:center;width:44px}
+td{padding:.58rem 1rem;border-top:1px solid var(--line);color:var(--ink);white-space:nowrap;transition:background-color .1s}
+tbody tr:hover td{background:var(--surface-alt)}
+td.name-cell{font-weight:600;max-width:280px;overflow:hidden;text-overflow:ellipsis}
+td.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--font-mono);font-size:.78rem}
+.tbl-footer{padding:.6rem 1rem;font-family:var(--font-mono);font-size:.72rem;color:var(--ink-3);background:var(--surface-alt);border-top:1px solid var(--line)}
+

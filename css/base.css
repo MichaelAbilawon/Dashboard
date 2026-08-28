@@ -1,0 +1,17 @@
+html{color-scheme:light dark}
+html,body{background:var(--paper);color:var(--ink)}
+body{font-family:var(--font-sans, 'IBM Plex Sans',-apple-system,BlinkMacSystemFont,sans-serif);min-height:100vh;font-size:14px;-webkit-font-smoothing:antialiased;transition:background-color .25s ease,color .25s ease}
+:root{
+  --font-display:'IBM Plex Serif',Georgia,serif;
+  --font-sans:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-mono:'IBM Plex Mono','SFMono-Regular',Consolas,monospace;
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;}
+}
+::selection{background:var(--brand);color:#fff}
+*:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+/* Slim, theme-aware scrollbars (webkit) */
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--scrollbar-thumb);border:2px solid var(--paper);border-radius:5px}

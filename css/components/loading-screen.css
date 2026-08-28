@@ -1,0 +1,17 @@
+/* ── LOADING SCREEN ── */
+#cloud-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem;position:relative;overflow:hidden;background:var(--paper)}
+#cloud-screen::before{content:'';position:absolute;inset:-24px;background-image:url('../../assets/images/loading-background.jpg');background-size:cover;background-position:center 35%;filter:blur(9px) saturate(.8) brightness(.92);transform:scale(1.06);z-index:0}
+#cloud-screen::after{content:'';position:absolute;inset:0;background:radial-gradient(120% 100% at 50% 30%,transparent 0%,var(--loading-overlay) 72%),var(--loading-overlay);z-index:1}
+.cloud-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:1.1rem;text-align:center}
+.cloud-logo-wrap{background:var(--logo-chip-bg);border:1px solid var(--logo-chip-border);padding:.5rem .9rem;box-shadow:0 2px 10px rgba(0,0,0,.12)}
+.cloud-logo-wrap img{height:30px;width:auto;display:block}
+.cloud-eyebrow{font-family:var(--font-mono);font-size:.72rem;font-weight:600;letter-spacing:.14em;color:var(--ink-2);text-transform:uppercase}
+.cloud-title{font-family:var(--font-display);font-size:1.9rem;font-weight:600;color:var(--ink);line-height:1.25}
+.cloud-title em{font-style:normal;color:var(--brand)}
+.cloud-rule{width:64px;height:2px;background:var(--gold)}
+.cloud-progress-wrap{width:100%;max-width:380px}
+.cloud-prog-bar{height:3px;background:rgba(124,138,147,.28);overflow:hidden;margin:.6rem 0;border-radius:2px}
+.cloud-prog-fill{height:100%;background:var(--brand);width:0%;transition:width .4s ease;border-radius:2px}
+.cloud-status{font-family:var(--font-mono);font-size:.78rem;color:var(--ink-2);min-height:1.2rem}
+.cloud-status.err{color:var(--bad)}
+
