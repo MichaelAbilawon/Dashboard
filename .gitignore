@@ -8,7 +8,6 @@
 # copy it to js/config.js locally and fill in the real values (see
 # README.md → "Configuration"). This line intentionally does not use
 # a wildcard like config*.js, so config.example.js stays tracked.
-js/config.js
 
 # ── OS files ──
 .DS_Store
