@@ -2,6 +2,13 @@
 .pa-context{font-family:var(--font-mono);font-size:.78rem;font-weight:600;color:var(--ink-2);background:var(--surface-alt);border:1px solid var(--line);padding:.65rem 1rem;margin-bottom:1.2rem}
 .pa-error{font-family:var(--font-sans);font-size:.8rem;font-weight:600;color:var(--bad);min-height:1.1em;margin:-.4rem 0 1rem}
 
+/* #pa-station-field wraps the Station label+input as one flex child
+   of .drill-bar (so the whole group can be hidden together in "All
+   Stations" scope) — it needs its own internal gap to preserve the
+   same visual spacing .drill-bar's own `gap` would otherwise give
+   these two elements as separate direct children. */
+#pa-station-field{display:inline-flex;align-items:center;gap:1rem}
+
 /* Bug fix: html{color-scheme:light dark} in base.css leaves the
    *native* calendar-picker icon following the OS's light/dark
    preference, completely independent of this app's own theme
@@ -11,11 +18,12 @@
    contrast against the input's --surface background, effectively
    invisible. Pinning color-scheme to whichever theme is actually
    active keeps the icon (and any other native date-picker chrome)
-   visible in both themes. */
-html[data-theme="light"] #pa-start,
-html[data-theme="light"] #pa-end{color-scheme:light}
-html[data-theme="dark"] #pa-start,
-html[data-theme="dark"] #pa-end{color-scheme:dark}
+   visible in both themes. Applies to every date input this tab
+   uses, including Compare Periods' Period B fields. */
+html[data-theme="light"] #pa-start, html[data-theme="light"] #pa-end,
+html[data-theme="light"] #pa-cmp-start, html[data-theme="light"] #pa-cmp-end{color-scheme:light}
+html[data-theme="dark"] #pa-start, html[data-theme="dark"] #pa-end,
+html[data-theme="dark"] #pa-cmp-start, html[data-theme="dark"] #pa-cmp-end{color-scheme:dark}
 
 /* The Recorded-Day Average is the single most important figure on
    this tab (req #17: "the most prominent metric"), so its KPI card
@@ -24,3 +32,24 @@ html[data-theme="dark"] #pa-end{color-scheme:dark}
    .kpi-card.accent is also used on Overview and Stations, and must
    not change size there. */
 #pa-kpis .kpi-card.accent .kpi-val{font-size:1.85rem}
+
+/* "Dig deeper" reveal — hidden until a result exists (see
+   js/pages/period-analysis.js's renderPaDigDeeper()), so the tab's
+   default first impression is unchanged from before this feature. */
+.pa-dig-deeper{display:flex;align-items:center;gap:.7rem;margin:1.4rem 0;flex-wrap:wrap}
+.pa-dig-label{font-family:var(--font-mono);font-size:.7rem;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em}
+.pa-panel{margin-top:1.6rem;padding-top:1.6rem;border-top:1px solid var(--line-strong)}
+
+/* Best/worst day highlighting — the same row that already renders
+   in the daily table just gets a subtle tint plus a small badge,
+   rather than a separate callout, so the table stays the single
+   place a person checks the numbers against (req #23). */
+.pa-best-row td{background:var(--good-tint)}
+.pa-worst-row td{background:var(--bad-tint)}
+.pa-badge{display:inline-block;font-family:var(--font-mono);font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:.1rem .4rem;border-radius:2px;margin-left:.4rem;vertical-align:middle}
+.pa-badge-best{background:var(--good);color:#fff}
+.pa-badge-worst{background:var(--bad);color:#fff}
+.pa-weekday-cell{font-family:var(--font-mono);font-size:.72rem;color:var(--ink-3)}
+.pa-pct{font-family:var(--font-mono);font-size:.72rem;color:var(--ink-3)}
+.pa-clickable-row{cursor:pointer}
+.pa-clickable-row:hover td{background:var(--surface-alt)}

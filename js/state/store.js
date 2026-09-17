@@ -13,6 +13,8 @@ var STATE = { month:null, day:'all', selectedStation:null,
   stationsSubtab:'perf',
   trendProduct:'compare', trendRange:'12',
   cmpA:null, cmpB:null, cmpProduct:'pms', cmpRange:'12',
-  paStation:null, paProduct:'pms', paStart:null, paEnd:null };
+  paStation:null, paProduct:'pms', paStart:null, paEnd:null, paScope:'station',
+  paCompareOpen:false, paCompareStart:null, paCompareEnd:null,
+  paPatternOpen:false, paPatternRange:'12', paPatternWeekday:null };
 var PERIOD_ROWS_CACHE = []; // exact daily rows currently shown on the Period Analysis table — CSV export reads only from here
 

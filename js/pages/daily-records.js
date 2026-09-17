@@ -11,28 +11,12 @@
    dotted-underline marker, so the number is never mistaken
    for a complete total.
    ════════════════════════════════════════════════════════ */
-var DAILY_FIELD_MAP = [
-  ['pmsVol','salesPMS'], ['agoVol','salesAGO'], ['dpkVol','salesDPK'], ['totalVol','totalVol'],
-  ['pmsRev','valPMS'], ['agoRev','valAGO'], ['dpkRev','valDPK'], ['totalRev','total']
-];
 function computeDailyRows(mk){
-  var dates = datesInMonth(mk);
-  return dates.map(function(d){
-    var stations = RAW_DATA[d].stations;
-    var row = { date:d, stationsCount: stations.length };
-    DAILY_FIELD_MAP.forEach(function(f){
-      var key=f[0], srcKey=f[1];
-      var sum=0, present=0, missing=0;
-      stations.forEach(function(s){
-        var v = s[srcKey];
-        if (isBlankVal(v)) missing++; else { present++; sum+=v; }
-      });
-      row[key] = present>0 ? sum : null;
-      row[key+'_partial'] = missing>0 && present>0;
-      row[key+'_missing'] = missing;
-    });
-    return row;
-  });
+  // Thin wrapper — the actual per-day rollup logic now lives in
+  // js/business/aggregation.js's computeDailyRowsForDates(), shared
+  // with Performance Analysis. Behavior here is unchanged: every
+  // date in the month, every station in scope (stationFilter=null).
+  return computeDailyRowsForDates(datesInMonth(mk), null);
 }
 function dailyCellHtml(val, partial, missingCount, fmtFn){
   if (val===null) return '<td class="num"><span class="blank-cell">—</span></td>';

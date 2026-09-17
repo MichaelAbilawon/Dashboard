@@ -71,7 +71,6 @@
       <div class="brand-block">
         <div class="brand-logo-wrap"><img src="assets/images/rainoil-logo.png" alt="Rainoil"></div>
         <div class="brand-text">
-          <div class="brand-word">Rainoil</div>
           <div class="brand-eyebrow">Monthly Performance Report</div>
         </div>
       </div>
@@ -284,9 +283,16 @@
       </div>
 
       <div class="drill-bar">
-        <label>Station</label>
-        <input type="text" id="pa-station" list="pa-station-list" placeholder="Search station…" onchange="onPaStationChange(this.value)">
-        <datalist id="pa-station-list"></datalist>
+        <label>Scope</label>
+        <div class="seg-group" id="pa-scope-group">
+          <button class="seg-btn active" data-val="station" onclick="setPaScope('station')">Single Station</button>
+          <button class="seg-btn" data-val="all" onclick="setPaScope('all')">All Stations</button>
+        </div>
+        <span id="pa-station-field">
+          <label>Station</label>
+          <input type="text" id="pa-station" list="pa-station-list" placeholder="Search station…" onchange="onPaStationChange(this.value)">
+          <datalist id="pa-station-list"></datalist>
+        </span>
         <label>Product</label>
         <select id="pa-product" onchange="renderPeriodAnalysis()">
           <option value="pms">PMS</option>
@@ -313,12 +319,38 @@
           <table>
             <thead><tr>
               <th>Date</th>
+              <th>Day</th>
               <th class="num" id="pa-vol-col">Volume (L)</th>
             </tr></thead>
             <tbody id="pa-body"></tbody>
           </table>
           </div>
           <div class="tbl-footer" id="pa-tbl-footer"></div>
+        </div>
+
+        <div class="pa-dig-deeper" id="pa-dig-deeper" style="display:none">
+          <span class="pa-dig-label">Dig deeper:</span>
+          <button class="seg-btn" id="pa-compare-toggle" onclick="togglePaCompare()">Compare with another period</button>
+          <button class="seg-btn" id="pa-pattern-toggle" onclick="togglePaPattern()">Pattern analysis</button>
+        </div>
+
+        <div class="pa-panel" id="pa-compare-panel" style="display:none">
+          <div class="sec-head">
+            <div class="sec-title">Compare Periods</div>
+            <div class="sec-sub">Same scope and product as above — pick a second date range to compare against.</div>
+          </div>
+          <div class="drill-bar">
+            <label>Period B start</label>
+            <input type="date" id="pa-cmp-start" onchange="onPaCompareDatesChange()">
+            <label>Period B end</label>
+            <input type="date" id="pa-cmp-end" onchange="onPaCompareDatesChange()">
+          </div>
+          <div class="pa-error" id="pa-compare-error"></div>
+          <div id="pa-compare-body"></div>
+        </div>
+
+        <div class="pa-panel" id="pa-pattern-panel" style="display:none">
+          <div id="pa-pattern-body"></div>
         </div>
       </div>
     </div>
@@ -343,11 +375,11 @@
 <script src="js/utils/chart-utils.js"></script>
 <script src="js/state/store.js"></script>
 <script src="js/services/supabase-service.js"></script>
-<script src="js/services/period-analysis-service.js"></script>
 <script src="js/business/aggregation.js"></script>
 <script src="js/business/station-analytics.js"></script>
 <script src="js/business/period-analysis.js"></script>
 <script src="js/app.js"></script>
+<script src="js/business/performance-analysis.js"></script>
 <script src="js/business/metrics.js"></script>
 <script src="js/pages/overview.js"></script>
 <script src="js/pages/budget.js"></script>

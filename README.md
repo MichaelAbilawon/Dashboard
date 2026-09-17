@@ -24,11 +24,16 @@ a Supabase (Postgres) database — no server, no build step.
   - **Daily Records** — the audit layer beneath every monthly total,
     with CSV export
   - **Product Mix** — this month vs prior month, by product
-  - **Period Analysis** — pick any station, product (PMS or AGO), and
-    date range to get the Recorded-Day Average — total recorded
-    volume ÷ number of days a value was actually recorded, never
-    calendar days. See `docs/ARCHITECTURE.md` §14 for the exact
-    definition and how it's tested.
+  - **Period Analysis** — pick a scope (single station or all
+    stations), product (PMS or AGO), and date range to get the
+    Recorded-Day Average — total recorded volume ÷ number of days a
+    value was actually recorded, never calendar days. See
+    `docs/ARCHITECTURE.md` §14 for the exact definition and how it's
+    tested. Once a result is showing, two deeper tools become
+    available: **Compare Periods** (the same scope/product against a
+    second date range, with % change) and **Pattern Analysis**
+    (day-of-week averages, plus a look at how the best day performed
+    in other months). See `docs/ARCHITECTURE.md` §16.
 
   Reporting period selection is two dropdowns — **Year** and
   **Month** — populated entirely from whatever years/months actually

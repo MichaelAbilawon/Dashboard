@@ -77,11 +77,11 @@ js/utils/format.js                 fmtNFull, fmtVFull, fmtPct, alpha, MONTHS...
 js/utils/chart-utils.js            chartPalette(), mkChart() (Chart.js wrapper)
 js/state/store.js                  RAW_DATA, MONTH_AGG, BUDGETS, STATE (global data store)
 js/services/supabase-service.js    All fetch() calls to the daily_sales / monthly_budgets tables
-js/services/period-analysis-service.js  Scoped fetch for Period Analysis (see §14)
-js/business/aggregation.js         buildMonthlyAggregates(), monthLabel(), getBudgetFor()
+js/business/aggregation.js         buildMonthlyAggregates(), monthLabel(), getBudgetFor(), computeDailyRowsForDates() (§16 — the one trusted daily rollup)
 js/business/station-analytics.js   allStationNames(), rangeMonthKeys(), MoM helpers
 js/business/period-analysis.js     summarizePeriodRows() — the Recorded-Day Average calculation (see §14)
-js/app.js                          launchDashboard(), switchTab(), renderAll(), year/month selector logic
+js/app.js                          launchDashboard(), switchTab(), renderAll(), year/month selector logic, daysInCalendarMonth()
+js/business/performance-analysis.js  Best/worst day, day-of-week, day-of-month-across-months, period comparison (see §16)
 js/business/metrics.js             monthMetrics() — budget attainment % calculation
 js/pages/overview.js               Tab 1 — Overview
 js/pages/budget.js                 Tab 2 — Budget vs Actual
@@ -89,7 +89,7 @@ js/pages/trend.js                  Tab 3 — Trend
 js/pages/stations.js               Tab 4 — Stations (list, detail, compare, in-detail trend)
 js/pages/daily-records.js          Tab 5 — Daily Records + CSV export
 js/pages/product-mix.js            Tab 6 — Product Mix
-js/pages/period-analysis.js        Tab 7 — Period Analysis (see §14)
+js/pages/period-analysis.js        Tab 7 — Period Analysis + Performance Analysis (see §14, §16)
 ```
 
 `upload.html` loads its own independent set:
@@ -494,3 +494,166 @@ changes. This was added in response to an internal IT review request
 `monthly_budgets` and other tables' RLS status being unverified from
 this codebase alone, which is the actual risk worth tracking down,
 independent of where the key text happens to live.
+
+## 16. Performance Analysis
+
+Added on top of Period Analysis rather than as a separate tab — see
+the design discussion this was built from for the reasoning (the
+short version: Period Analysis's Recorded-Day Average was already
+almost exactly what a single-station "Daily Performance" view needs,
+and duplicating it in a new tab would have created two places
+computing close to the same thing, which the enhancement's own brief
+explicitly warned against). The tab's default view — Station +
+Product + Start/End date → Recorded-Day Average — is unchanged in
+appearance and behavior from before this work. Two secondary panels
+(Compare Periods, Pattern Analysis) only become visible once a result
+is already showing, so a first-time look at the tab is identical to
+before.
+
+### What changed under the hood
+
+**Scope.** The station field now sits behind a Single Station / All
+Stations toggle (`setPaScope()`). All Stations sums every reporting
+station per day — network-wide, same concept as Daily Records, just
+over an arbitrary date range instead of one calendar month.
+
+**Data source.** Previously this tab fetched from Supabase on every
+filter change, scoped to one station (`js/services/period-analysis-service.js`).
+That file is now retired. All Stations scope can't be done
+efficiently as a per-station scoped fetch — it needs every station's
+data for the range, which is already sitting in `RAW_DATA` from the
+initial page load regardless. Rather than have this tab sometimes
+fetch and sometimes read from memory depending on scope, both scopes
+now read from `RAW_DATA` uniformly, via a new row-builder
+(`rowsFromRawData()` in `js/business/performance-analysis.js`) that
+produces the exact row shape `summarizePeriodRows()` already expected
+from the API. **`summarizePeriodRows()` itself was not touched** —
+same function, same tested null-handling and duplicate-date summing,
+just fed rows from a different source. The single-station default
+view is not just unaffected but slightly faster now (no network
+round trip per filter change).
+
+**The one trusted daily aggregation layer (§16 of the enhancement
+brief).** Daily Records' `computeDailyRows(mk)` used to be the only
+place with real per-day rollup logic, hardwired to one calendar
+month. That logic moved to `js/business/aggregation.js` as
+`computeDailyRowsForDates(dates, stationFilter)` — any date list, any
+station scope (or none, for network-wide). `computeDailyRows(mk)` is
+now a one-line wrapper: `computeDailyRowsForDates(datesInMonth(mk), null)`.
+Verified byte-identical to the pre-refactor output via a regression
+test that ran both the old and new code against the same synthetic
+month and diffed the results. Performance Analysis's day-of-month and
+day-of-week functions both build on this same function, so a figure
+computed on Daily Records and the equivalent figure computed inside
+Performance Analysis can never drift apart — they're the same
+function call.
+
+### New business logic — `js/business/performance-analysis.js`
+
+- **`performanceSummary(start, end, product, stationFilter)`** — one
+  call, either scope, wraps `rowsFromRawData()` + `summarizePeriodRows()`.
+- **`bestWorstDay(series)`** — returns every date tied at the
+  max/min, not just one (a genuine tie is common with rounded
+  figures, and the enhancement brief was explicit that a tie must
+  show every tied date, not arbitrarily pick one). `null` if there's
+  no recorded data at all — never a fabricated day.
+- **`dayOfWeekBreakdown(series)`** — average volume per weekday
+  within whatever range is active. A weekday with zero recorded
+  occurrences returns `avgVolume: null`, not `0`.
+- **`weekdayAcrossMonths(weekdayIdx, monthKeys, product, stationFilter)`**
+  — the automatic recurring-pattern investigation triggered by the
+  best recorded day. **This corrects an initial version of this
+  feature** that matched on day-of-month number (28 Aug → 28 Jul →
+  28 Jun) instead of weekday (Friday 28 Aug → other recorded Fridays
+  in July → other recorded Fridays in June) — two genuinely different
+  business questions, only one of which was intended. The fix changed
+  the actual date-selection logic, not just a label: for each
+  comparison month, every calendar date matching the target weekday
+  is enumerated first (a month always has 4 or 5), then only the
+  dates that actually have a valid record are summed and counted —
+  `weekdayOccurrences` (how many exist that month) and `recordedDays`
+  (how many actually have data) are reported separately, and the
+  average divides by the latter, never the former. `dayAcrossMonths()`
+  and `dayOfMonthGrid()` (the original day-of-month functions) are
+  unchanged and still available — day-of-month and day-of-week are
+  legitimately different analyses, and the enhancement brief that
+  requested this correction was explicit that day-of-month shouldn't
+  be deleted, just no longer be the *automatic* one.
+- **`dayAcrossMonths(dayNum, monthKeys, product, stationFilter)`** and
+  **`dayOfMonthGrid(monthKeys, product, stationFilter)`** — the day-
+  of-month-across-months capability, with three distinct states per
+  cell: `'day-not-in-month'` (e.g. day 31 in February — the day never
+  existed that month), `'no-record'` (the day exists but nothing was
+  recorded), and `'ok'` (a real value). Not currently wired into the
+  UI (see "What was deliberately NOT built" below) — kept available
+  for a future explicit day-of-month option.
+- **`comparePeriodSummaries(a, b)`** — percentage-change fields are
+  `null` (rendered as "N/A") whenever the baseline period has no
+  valid total to divide by, never `NaN`/`Infinity`/a misleading `0%`.
+
+### What was deliberately NOT built
+
+- **A separate Station-vs-Station comparison inside this tab** —
+  that capability already exists (Stations tab → Compare), and
+  building a second one here would have been exactly the duplication
+  the enhancement brief warned against. If daily-granularity (rather
+  than the existing month-bucketed) station-vs-station comparison is
+  wanted later, extending the existing Compare Stations view to
+  optionally use `performanceSummary()` would be the natural path —
+  not a new tool.
+- **A full 1–31 day-of-month grid rendered by default** —
+  `dayOfMonthGrid()` exists and is tested, but nothing in the UI
+  currently surfaces it — the automatic best-day investigation uses
+  `weekdayAcrossMonths()` instead (see above). Wiring the day-of-month
+  grid in as an explicit, separately-chosen option is straightforward
+  if wanted later — the business logic already exists and is tested.
+- **Combined PMS+AGO totals** — every function above takes one
+  product at a time, per the enhancement brief's explicit instruction
+  not to combine products without a specific request to do so.
+
+### Testing performed
+
+- 17 unit-test assertions on `computeDailyRowsForDates()` and
+  `calendarDateRange()`, including station-scope isolation and a
+  leap-year (2024) vs. non-leap-year (2025) 29 February check.
+- A regression test running the pre-refactor `computeDailyRows()`
+  logic and the new wrapper against identical synthetic data,
+  confirming byte-identical output.
+- 22 unit-test assertions on `performance-analysis.js`: a genuine
+  tie at the maximum (matching the enhancement brief's own worked
+  example), all-stations scope summing correctly, day-of-week
+  aggregation with a weekday that has zero occurrences, the February
+  day-31 "day-not-in-month" case, and percentage-change guarding
+  against a zero and an unavailable baseline.
+- A full end-to-end reconciliation (per the enhancement brief's own
+  §43 request): a known 10-day synthetic period for one station,
+  deliberately including two gap days and a genuine tie, with a
+  second station present in the same data throughout to prove no
+  scope leakage. Every figure — sum, recorded-day count, average,
+  best/worst day, and a period-comparison percentage — reconciled
+  exactly against an independently-computed manual value.
+- Every unrelated file in the project was fingerprinted (SHA-256)
+  before and after this work; all matched exactly except
+  `js/config.js` (expected — the person's own Supabase key was
+  rotated between sessions, unrelated to this change).
+- **Weekday-correction tests (18 assertions):** reproduced the
+  correction's own worked example — 28 August 2026 confirmed to fall
+  on a Friday via dynamic date computation, not a hardcoded lookup —
+  then verified July 2026's 5 Fridays with one deliberately missing
+  (recorded-day count correctly 4, average correctly ÷4 not ÷5), all
+  7 weekday indices independently, All-Stations scope with AGO
+  product, and a leap-year February (2024) with its 5th Thursday
+  landing on the leap day itself. One assertion specifically printed
+  the old day-of-month result next to the new weekday result for the
+  same test month and confirmed they differ — direct evidence the
+  underlying date selection changed, not just a heading.
+
+**What this testing could not cover:** there is no network path to
+Supabase from this environment, so nothing here ran against a real,
+live multi-year dataset. All of the above used synthetic data
+constructed to match the shapes and edge cases the enhancement brief
+specifically asked to be tested (ties, gaps, February, scope
+isolation) — not real production figures. A live check with a known
+real period, the same way the synthetic reconciliation above was
+done, is the one thing still worth doing before relying on this for
+management reporting.
